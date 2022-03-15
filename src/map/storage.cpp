@@ -371,6 +371,19 @@ void storage_storageadd(struct map_session_data* sd, struct s_storage *stor, int
 	if (result == STORAGE_ADD_INVALID)
 		return;
 	else if (result == STORAGE_ADD_OK) {
+
+#ifdef Pandas_NpcFilter_STORAGE_ADD//将道具从背包存入普通仓库或扩展仓库
+		pc_setreg(sd, add_str("@recv_nameid"), sd->inventory.u.items_inventory[index].nameid); // 存入的道具编号
+		pc_setreg(sd, add_str("@recv_amount"), amount); // 存入的道具数量
+		pc_setreg(sd, add_str("@recv_source"), TABLE_INVENTORY); // 存入的道具来源
+		pc_setreg(sd, add_str("@recv_idx"), index); // 存入的道具来源位置序号
+		pc_setreg(sd, add_str("@recv_storid"), stor->stor_id); // 存入的仓库编号
+		if (npc_script_filter(sd, NPCF_STORAGE_ADD)) {
+			clif_dropitem(sd, index, 0);
+			return;
+		}
+#endif // Pandas_NpcFilter_STORAGE_ADD
+
 		switch( storage_additem(sd, stor, &sd->inventory.u.items_inventory[index], amount) ){
 			case 0:
 				pc_delitem(sd,index,amount,0,4,LOG_TYPE_STORAGE);
@@ -405,6 +418,18 @@ void storage_storageget(struct map_session_data *sd, struct s_storage *stor, int
 	if (result != STORAGE_ADD_OK)
 		return;
 
+#ifdef Pandas_NpcFilter_STORAGE_DEL//将道具从普通仓库或扩展仓库取回背包
+	pc_setreg(sd, add_str("@retr_nameid"), stor->u.items_storage[index].nameid); // 取出的道具编号
+	pc_setreg(sd, add_str("@retr_amount"), amount); // 取出的道具数量
+	pc_setreg(sd, add_str("@retr_target"), TABLE_INVENTORY); // 取出的道具去处
+	pc_setreg(sd, add_str("@retr_idx"), index); // 取出的道具来源位置序号
+	pc_setreg(sd, add_str("@retr_storid"), stor->stor_id); // 取出的仓库编号
+	if (npc_script_filter(sd, NPCF_STORAGE_DEL)) {
+		clif_storageitemremoved(sd, index, 0);
+		return;
+	}
+#endif // Pandas_NpcFilter_STORAGE_DEL
+
 	if ((flag = pc_additem(sd,&stor->u.items_storage[index],amount,LOG_TYPE_STORAGE)) == ADDITEM_SUCCESS)
 		storage_delitem(sd,stor,index,amount);
 	else {
@@ -434,6 +459,19 @@ void storage_storageaddfromcart(struct map_session_data *sd, struct s_storage *s
 	if (result == STORAGE_ADD_INVALID)
 		return;
 	else if (result == STORAGE_ADD_OK) {
+
+#ifdef Pandas_NpcFilter_STORAGE_ADD//将道具从手推车存入普通仓库或扩展仓库
+		pc_setreg(sd, add_str("@recv_nameid"), sd->cart.u.items_cart[index].nameid); // 存入的道具编号
+		pc_setreg(sd, add_str("@recv_amount"), amount); // 存入的道具数量
+		pc_setreg(sd, add_str("@recv_source"), TABLE_CART); // 存入的道具来源
+		pc_setreg(sd, add_str("@recv_idx"), index); // 存入的道具来源位置序号
+		pc_setreg(sd, add_str("@recv_storid"), stor->stor_id); // 存入的仓库编号
+		if (npc_script_filter(sd, NPCF_STORAGE_ADD)) {
+			clif_cart_delitem(sd, index, 0);
+			return;
+		}
+#endif // Pandas_NpcFilter_STORAGE_ADD
+
 		switch( storage_additem(sd, stor, &sd->cart.u.items_cart[index], amount) ){
 			case 0:
 				pc_cart_delitem(sd,index,amount,0,LOG_TYPE_STORAGE);
@@ -472,6 +510,18 @@ void storage_storagegettocart(struct map_session_data* sd, struct s_storage *sto
 	result = storage_canGetItem(stor, index, amount);
 	if (result != STORAGE_ADD_OK)
 		return;
+
+#ifdef Pandas_NpcFilter_STORAGE_DEL//将道具从普通仓库或扩展仓库取回手推车
+	pc_setreg(sd, add_str("@retr_nameid"), stor->u.items_storage[index].nameid); // 取出的道具编号
+	pc_setreg(sd, add_str("@retr_amount"), amount); // 取出的道具数量
+	pc_setreg(sd, add_str("@retr_target"), TABLE_CART); // 取出的道具去处
+	pc_setreg(sd, add_str("@retr_idx"), index); // 取出的道具来源位置序号
+	pc_setreg(sd, add_str("@retr_storid"), stor->stor_id); // 取出的仓库编号
+	if (npc_script_filter(sd, NPCF_STORAGE_DEL)) {
+		clif_storageitemremoved(sd, index, 0);
+		return;
+	}
+#endif // Pandas_NpcFilter_STORAGE_DEL
 
 	if ((flag = pc_cart_additem(sd,&stor->u.items_storage[index],amount,LOG_TYPE_STORAGE)) == 0)
 		storage_delitem(sd,stor,index,amount);
@@ -940,6 +990,18 @@ void storage_guild_storageadd(struct map_session_data* sd, int index, int amount
 		return;
 	}
 
+#ifdef Pandas_NpcFilter_STORAGE_ADD//将道具从背包存入公会仓库
+	pc_setreg(sd, add_str("@recv_nameid"), sd->inventory.u.items_inventory[index].nameid); // 存入的道具编号
+	pc_setreg(sd, add_str("@recv_amount"), amount); // 存入的道具数量
+	pc_setreg(sd, add_str("@recv_source"), TABLE_INVENTORY); // 存入的道具来源
+	pc_setreg(sd, add_str("@recv_idx"), index); // 存入的道具来源位置序号
+	pc_setreg(sd, add_str("@recv_storid"), -1); // 存入的仓库编号
+	if (npc_script_filter(sd, NPCF_STORAGE_ADD)) {
+		clif_dropitem(sd, index, 0);
+		return;
+	}
+#endif // Pandas_NpcFilter_STORAGE_ADD
+
 	if(storage_guild_additem(sd,stor,&sd->inventory.u.items_inventory[index],amount))
 		pc_delitem(sd,index,amount,0,4,LOG_TYPE_GSTORAGE);
 	else {
@@ -980,6 +1042,18 @@ void storage_guild_storageget(struct map_session_data* sd, int index, int amount
 		return;
 	}
 
+#ifdef Pandas_NpcFilter_STORAGE_DEL//将道具从公会仓库取回背包
+	pc_setreg(sd, add_str("@retr_nameid"), stor->u.items_guild[index].nameid); // 取出的道具编号
+	pc_setreg(sd, add_str("@retr_amount"), amount); // 取出的道具数量
+	pc_setreg(sd, add_str("@retr_target"), TABLE_INVENTORY); // 取出的道具去处
+	pc_setreg(sd, add_str("@retr_idx"), index); // 取出的道具来源位置序号
+	pc_setreg(sd, add_str("@retr_storid"), -1); // 取出的仓库编号
+	if (npc_script_filter(sd, NPCF_STORAGE_DEL)) {
+		clif_storageitemremoved(sd, index, 0);
+		return;
+	}
+#endif // Pandas_NpcFilter_STORAGE_DEL
+
 	if((flag = pc_additem(sd,&stor->u.items_guild[index],amount,LOG_TYPE_GSTORAGE)) == 0)
 		storage_guild_delitem(sd,stor,index,amount);
 	else { // inform fail
@@ -1012,6 +1086,18 @@ void storage_guild_storageaddfromcart(struct map_session_data* sd, int index, in
 
 	if( amount < 1 || amount > sd->cart.u.items_cart[index].amount )
 		return;
+
+#ifdef Pandas_NpcFilter_STORAGE_ADD//将道具从手推车存入公会仓库
+	pc_setreg(sd, add_str("@recv_nameid"), sd->cart.u.items_cart[index].nameid); // 存入的道具编号
+	pc_setreg(sd, add_str("@recv_amount"), amount); // 存入的道具数量
+	pc_setreg(sd, add_str("@recv_source"), TABLE_CART); // 存入的道具来源
+	pc_setreg(sd, add_str("@recv_idx"), index); // 存入的道具来源位置序号
+	pc_setreg(sd, add_str("@recv_storid"), -1); // 存入的仓库编号
+	if (npc_script_filter(sd, NPCF_STORAGE_ADD)) {
+		clif_cart_delitem(sd, index, 0);
+		return;
+	}
+#endif // Pandas_NpcFilter_STORAGE_ADD
 
 	if(storage_guild_additem(sd,stor,&sd->cart.u.items_cart[index],amount))
 		pc_cart_delitem(sd,index,amount,0,LOG_TYPE_GSTORAGE);
@@ -1047,6 +1133,18 @@ void storage_guild_storagegettocart(struct map_session_data* sd, int index, int 
 
 	if(amount < 1 || amount > stor->u.items_guild[index].amount)
 		return;
+
+#ifdef Pandas_NpcFilter_STORAGE_DEL//将道具从公会仓库取回手推车
+	pc_setreg(sd, add_str("@retr_nameid"), stor->u.items_guild[index].nameid); // 取出的道具编号
+	pc_setreg(sd, add_str("@retr_amount"), amount); // 取出的道具数量
+	pc_setreg(sd, add_str("@retr_target"), TABLE_CART); // 取出的道具去处
+	pc_setreg(sd, add_str("@retr_idx"), index); // 取出的道具来源位置序号
+	pc_setreg(sd, add_str("@retr_storid"), -1); // 取出的仓库编号
+	if (npc_script_filter(sd, NPCF_STORAGE_DEL)) {
+		clif_storageitemremoved(sd, index, 0);
+		return;
+	}
+#endif // Pandas_NpcFilter_STORAGE_DEL
 
 	if((flag = pc_cart_additem(sd,&stor->u.items_guild[index],amount,LOG_TYPE_GSTORAGE)) == 0)
 		storage_guild_delitem(sd,stor,index,amount);

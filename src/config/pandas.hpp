@@ -1370,6 +1370,36 @@
 		// 事件类型: Filter / 事件名称: OnPCDropItemFilter
 		// 常量名称: NPCF_DROPITEM / 变量名称: dropitem_filter_name
 		#define Pandas_NpcFilter_DROPITEM
+
+		// 当玩家准备将道具存入仓库时触发过滤器 [香草]
+		// 事件类型: Filter / 事件名称: OnPCStorageAddFilter
+		// 常量名称: NPCF_STORAGE_ADD / 变量名称: storage_add_filter_name
+		#define Pandas_NpcFilter_STORAGE_ADD
+
+		// 当玩家准备将道具取出仓库时触发过滤器 [香草]
+		// 事件类型: Filter / 事件名称: OnPCStorageDelFilter
+		// 常量名称: NPCF_STORAGE_DEL / 变量名称: storage_del_filter_name
+		#define Pandas_NpcFilter_STORAGE_DEL
+
+		// 当玩家准备将道具移入收藏栏位时触发过滤器 [香草]
+		// 事件类型: Filter / 事件名称: OnPCFavoriteAddFilter
+		// 常量名称: NPCF_FAVORITE_ADD / 变量名称: favorite_add_filter_name
+		#define Pandas_NpcFilter_FAVORITE_ADD
+
+		// 当玩家准备将道具移回普通栏位时触发过滤器 [香草]
+		// 事件类型: Filter / 事件名称: OnPCFavoriteDelFilter
+		// 常量名称: NPCF_FAVORITE_DEL / 变量名称: favorite_del_filter_name
+		#define Pandas_NpcFilter_FAVORITE_DEL
+
+		// 当玩家准备将道具从背包存入手推车时触发过滤器 [香草]
+		// 事件类型: Filter / 事件名称: OnPCCartAddFilter
+		// 常量名称: NPCF_CART_ADD / 变量名称: cart_add_filter_name
+		#define Pandas_NpcFilter_CART_ADD
+
+		// 当玩家准备将道具从手推车取回背包时触发过滤器 [香草]
+		// 事件类型: Filter / 事件名称: OnPCCartDelFilter
+		// 常量名称: NPCF_CART_DEL / 变量名称: cart_del_filter_name
+		#define Pandas_NpcFilter_CART_DEL
 		// PYHELP - NPCEVENT - INSERT POINT - <Section 1>
 	#endif // Pandas_Struct_Map_Session_Data_EventHalt
 
