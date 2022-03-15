@@ -10984,7 +10984,11 @@ BUILDIN_FUNC(checkcart)
 		return SCRIPT_CMD_FAILURE;
 
 	if( pc_iscarton(sd) )
+#ifdef Pandas_ScriptResults_CheckCart
+		script_pushint(st, sd->sc.data[SC_PUSH_CART]->val1);
+#else
 		script_pushint(st, 1);
+#endif // Pandas_ScriptResults_CheckCart
 	else
 		script_pushint(st, 0);
 

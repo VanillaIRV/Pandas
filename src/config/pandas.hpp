@@ -2075,6 +2075,9 @@
 
 	// 使 OnSellItem 标签可以返回被出售道具的背包序号 [Sola丶小克]
 	#define Pandas_ScriptResults_OnSellItem
+
+	// 使 checkcart 指令可以返回角色的手推车外观类型 [香草]
+	#define Pandas_ScriptResults_CheckCart
 #endif // Pandas_ScriptResults
 
 // ============================================================================
